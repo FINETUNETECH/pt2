@@ -1,0 +1,27 @@
+{% extends 'serviceapp/base.html' %}
+
+{% block 'content' %}
+    <div class="container">
+        <div class="col-lg-7 m-auto my-5 py -3">
+            <h1 class="display-5 text-center mb-5">Contact us</h1>
+            <form action="{% url 'contact' %}" method="POST">
+              {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingInput" name="name" placeholder="Name">
+                    <label for="floatingInput">Name*</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="floatingPassword" name="mobile" placeholder="Mobile number" maxlength="10">
+                    <label for="floatingPassword">Mobile number</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <textarea class="form-control" style="height:170px;" Name="message" id="floatingPassword" placeholder="Message" rows="10" cols="50"> </textarea>
+                    <label for="floatingPassword">Message</label>
+                  </div>
+                  <div class="form-floating mb-3 text-center">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                  </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

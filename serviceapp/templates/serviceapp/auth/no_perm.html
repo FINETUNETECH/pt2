@@ -1,0 +1,11 @@
+{% extends 'serviceapp/base.html' %}
+{% block 'content' %}
+<div class="container py-5 my-5">
+    <h1 class="text-center mt-5 pt-5">
+        Sorry, Your login does not have enough permission to view this page!
+    </h1>
+    <p class="text-center mb-5 pb-5">
+        Please <a href="{% url 'logout' %}">Logout</a> and login with the account which has required access.
+    </p>
+</div>
+{% endblock %}

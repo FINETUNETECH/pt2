@@ -1,0 +1,24 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% block 'content' %}
+    <main class="page-content">
+        <div class="product-manager">
+            {% comment %} <div class="form-check form-switch my-1 position-relative">
+                <label class="form-check-label position-absolute t-0" style="left:0; " for="flexSwitchCheckChecked">Product view</label>
+                <input class="form-check-input" type="checkbox" style="margin-left: 61px;" role="switch" id="productOrspareViewSwitch">
+                <label class="form-check-label" for="flexSwitchCheckChecked" style="vertical-align:bottom; margin-left:5px;">Spare view</label>
+            </div> {% endcomment %}
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="prods" id="prodspec" value="prodspec" checked>
+                <label class="form-check-label" for="prodspec">
+                  Product Spec
+                </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="prods" id="prods" value="prods">
+                <label class="form-check-label" for="prods">
+                  Products
+                </label>
+            </div>
+        </div>
+    </main>
+{% endblock 'content' %}

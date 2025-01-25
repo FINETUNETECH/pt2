@@ -1,0 +1,152 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% load static %}
+
+{% block 'content' %}
+    <main class="page-content">
+        <div class="container">
+          <div class="row g-5">
+            <div class="col-md-6">
+              <h4 class="mt-4 text-left" id="exampleModalLabel">Add New User</h4>
+              <form action="{% url 'register' %}?q=add_user" class="pt-3" method="post">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" name="mobile" id="registermobileno" placeholder="Enter mobile number" maxlength='10' required>
+                  <label for="registermobileno">Mobile no*</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" name="email" id="registeremail" placeholder="Email Id (optional)">
+                  <label for="registeremail">Email Id (optional)</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="password" class="form-control" name="password" id="registerpassword" placeholder="Password" required>
+                  <label for="registerpassword">Password</label>
+                </div>
+                <div class="row g-0">
+                  <div class="form-check col-md-2">
+                    <input class="form-check-input" type="checkbox" name="is_admin" id="admin">
+                    <label class="form-check-label" for="admin">
+                      Admin
+                    </label>
+                  </div>
+                  <div class="form-check col-md-2">
+                    <input class="form-check-input" type="checkbox" name="is_staff" id="staff">
+                    <label class="form-check-label" for="staff">
+                      Staff
+                    </label>
+                  </div>
+                  <div class="form-check col-md-2">
+                    <input class="form-check-input" type="checkbox" name="is_manager" id="manager_post">
+                    <label class="form-check-label" for="manager_post">
+                      Manager
+                    </label>
+                  </div>
+                </div>
+                <div class="form-floating text-center">
+                  <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <h4 class="mt-4 mb-4 text-left" id="exampleModalLabel">All Users</h4>
+              {% for user in all_users %}
+              <div class="card cursor-pointer" data-id="{{user.id}}" data-bs-toggle="modal" data-bs-target="#edituserModal" onclick="getUser('{{user.id}}')">
+                <div class="card-body">
+                  <div>
+                    <h5 class="card-title" id="username"><img src="{% static 'service/images/user.png' %}" width="30" height="30" class="img-fluid me-2" alt="">{% if user.name == 'Anonymous' %}No Name {% else %}{{user.name}} {% endif %}</h5>
+                    {% comment %} <button class="btn btn-sm del-user no-modal position-relative float-end"><i class="bi bi-trash no-modal"></i></button> {% endcomment %}
+                  </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <i class="lni lni-phone me-2"></i><p id="phone" class="card-text d-inline-block">{{user.phone}}</p>
+                      </div>
+                      <div class="col-md-6">
+                        <button class="btn btn-sm btn-primary rounded-pill d-block ms-auto" data-bs-toggle="modal" data-bs-target="#changePasswordModal" onclick="getUser('{{user.id}}')">Change Password</button>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+    </main>
+    <!-- User Edit -->
+  <div class="modal fade" id="edituserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="nameInput" placeholder="Name*">
+              <label for="nameInput">Name</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="emailInput" placeholder="Name*">
+              <label for="emailInput">Email</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" pattern="\d*" class="form-control" id="phoneInput" placeholder="Name*" min="0" maxlength="10">
+              <label for="phoneInput">Phone*</label>
+            </div>
+            <div class="row g-0">
+              <div class="form-check col-md-2">
+                <input class="form-check-input" type="checkbox" name="Admin" id="updateadmin">
+                <label class="form-check-label" for="updateadmin">
+                  Admin
+                </label>
+              </div>
+              <div class="form-check col-md-2">
+                <input class="form-check-input" type="checkbox" name="Staff" id="updatestaff">
+                <label class="form-check-label" for="updatestaff">
+                  Staff
+                </label>
+              </div>
+              <div class="form-check col-md-2">
+                <input class="form-check-input" type="checkbox" name="Manager" id="updatemanager">
+                <label class="form-check-label" for="updatemanager">
+                  Manager
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" onclick="deleteUser()">Delete</button>
+          <button type="button" id="editUser" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="exampleModalLabel">Change password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="passwordInput" placeholder="Password*" required>
+              <label for="passwordInput">Password*</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="confirmPasswordInput" placeholder="Password*" required>
+              <label for="confirmPasswordInput">Confirm Password*</label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" id="editPass" class="btn btn-primary" onclick="changePass()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% include 'serviceapp/auth/back_to_dashboard.html' %}
+{% endblock %}

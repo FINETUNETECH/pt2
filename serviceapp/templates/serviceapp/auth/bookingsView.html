@@ -1,0 +1,237 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% load static %}
+
+{% block 'content' %}
+    <main class="page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="fs-2 mb-3">New Booking</h6>
+                            <form action="">
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control primaryno" type="text" name="" id="bookingno" placeholder="Mobile No*" maxlength="10" required>
+                                    <label for="bookingno">Mobile No*</label>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <button type="button" class="position-absolute align-middle end-0 t-0 btn h-100 autofill-alter-number" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alternate mobile number same as above"><i class="bx bx-caret-up-circle"></i></button>
+                                    <input class="form-control alternateno" type="text" name="" id="alternatebookingno" placeholder="Alternate Mobile No*" maxlength="10" >
+                                    <label for="alternatebookingno">Alternate Mobile No*</label>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control" type="text" name="" id="bookingname" placeholder="Name*" required>
+                                    <label for="bookingname">Name*</label>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control py-4" type="text" id="brandInput" name="" id="brandName" placeholder="Brand*" autocomplete="off" required>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control py-4" id="productInput" type="text" name="" placeholder="Product*" autocomplete="off" required>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control" type="text" name="" id="mobile_pin" placeholder="Mobile password" maxlength="25">
+                                    <label for="mobile_pin">Mobile password</label>
+                                </div>
+                                
+                                {% comment %} <div class="input-group col-12 mb-2">
+                                    <span class="input-group-text">₹</span>
+                                    <input type="number" class="form-control" placeholder="Advance payment" min="0" aria-label="Amount (to the nearest dollar)">
+                                </div> {% endcomment %}
+                                <!-- Build your select: -->
+                                <div class="col-12 mb-2">
+                                    <select id="issue_select" multiple="multiple" required>
+                                        {% for issue in issues %}
+                                            <option value="{{issue.issue_name}}" data-id={{issue.id}}>{{issue.issue_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                {% comment %} <div class="form-check form-switch p-0">
+                                    <label class="form-check-label float-start" style="margin-right:39px;" for="flexSwitchCheckChecked">Enquiry</label>
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+                                    <label class="form-check-label" for="flexSwitchCheckChecked">Customer</label>
+                                  </div> {% endcomment %}
+                                <div class="text-center">
+                                    {% comment %} <button type="button" class="btn btn-success save_booking">Add Booking</button> {% endcomment %}
+                                    <button type="button" class="btn btn-success rounded-pill mt-2" onclick="fetchprice()" data-bs-toggle="modal" data-bs-target="#booking_confirm_modal">next <i class="fs-4 bx bx-right-arrow-alt"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="fs-2 mb-3">All Bookings</h6>
+                            <div class="row all_bookings">
+                                {% for booking in bookings %}
+                                    <div class="col-lg-6">
+                                        <div class="card booking_card" data-booking="{{booking.id}}" data-bs-toggle="modal" data-bs-target="#bookingdetailModal" data-bs-focus="false">
+                                            <div class="card-body">
+                                                <h6 class="booking_name">{{booking.name}}</h6>
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <div class="contact">
+                                                            <i class="bx bx-phone"></i> {{booking.mobile}}
+                                                        </div>
+                                                        <span class="badge rounded-pill bg-danger">{{booking.enq_or_cus}}</span>
+                                                    </div>
+                                                    {% comment %} <div class="col-4">
+                                                        <div class="contact">
+                                                            Issue:
+                                                            <span class="badge bg-success">{{booking.issue}}</span>
+                                                        </div>
+                                                    </div> {% endcomment %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="text-center">
+                                <a target="_blank" href="{% url 'allbookings' %}" class="btn rounded-pill btn-danger">View all</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="modal" id="booking_confirm_modal">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content" style="border-radius:0;">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title">Confirm Booking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card border shadow-none">
+                        <div class="card-header py-3">
+                             <div class="row align-items-center g-3">
+                               <div class="col-12 col-lg-6">
+                                 <h5 class="mb-0" id="product_name">Phonetreat</h5>
+                               </div>
+                               <div class="col-12 col-lg-6 text-md-end">
+                                 {% comment %} <a href="javascript:;" class="btn btn-sm btn-danger me-2"><i class="bi bi-file-earmark-pdf-fill"></i> Export as PDF</a> {% endcomment %}
+                                 {% comment %} <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-secondary"><i class="bi bi-printer-fill"></i> Print</a> {% endcomment %}
+                               </div>
+                             </div>
+                        </div>
+                        
+                       <div class="card-body">
+                            <div class="row issue-list">
+                            </div>
+                            <div class="customer-questions">
+                                <div class="back-btn">
+                                    <button class="back-btn btn rounded-pill btn-success btn-sm" onclick="goback('customer-questions', 'issue-list')"><i class="bx bx-arrow-back"></i> Back</button>
+                                </div>
+                               <div class="question-list mt-2">
+                                
+                               </div>
+                            </div>
+                            <div class="gross-amount">
+                                
+                            </div>
+                            <div class="balance_payment custom-d-none">
+                                The balance payment is 
+                                    <span class="display-amount">₹<span class="balance_amount"></span></span>
+                            </div>
+                        </div>
+                        <div class="text-end mb-2">
+                            <button class="btn btn-danger btn-lg enq-btn" onclick="saveCustomer('ENQ')">Save Enquiry</button>
+                            <button class="btn btn-primary btn-lg" onclick="saveCustomer('CUS')">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% comment %} booking detail Modal{% endcomment %}
+   <!-- Modal -->
+    <div class="modal" id="bookingdetailModal" tabindex="-1" data-bs-focus="false" aria-labelledby="bookingdetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingdetailModalLabel">Edit Booking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control primaryno" type="text" name="" id="bookedmobno" placeholder="Mobile No*" maxlength="10" required>
+                                    <label for="bookedmobno">Mobile No*</label>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <button type="button" class="position-absolute align-middle end-0 t-0 btn h-100 autofill-alter-number" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alternate mobile number same as above"><i class="bx bx-caret-up-circle"></i></button>
+                                    <input class="form-control alternateno" type="text" name="" id="bookedalternatebookingno" placeholder="Alternate Mobile No*" maxlength="10" >
+                                    <label for="bookedalternatebookingno">Alternate Mobile No*</label>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control" type="text" name="" id="bookedname" placeholder="Name*" required>
+                                    <label for="bookedname">Name*</label>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control py-4 edit-brand-ip" type="text" id="bookedbrand" name="" id="brandName" placeholder="Brand*" autocomplete="off" required>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control py-4 edit-product-ip" id="bookedProduct" type="text" name="" placeholder="Product*" autocomplete="off" required>
+                                </div>
+                                <div class="col-12 mb-2 form-floating">
+                                    <input class="form-control" type="text" name="" id="booked_mobile_pin" placeholder="Mobile password" maxlength="25">
+                                    <label for="booked_mobile_pin">Mobile password</label>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <select id="selectedissuetext" class="selectedissuetext" multiple="multiple" data-issue-selected="selected_issues" required>
+                                        {% for issue in issues %}
+                                            <option value="{{issue.issue_name}}" data-id={{issue.id}}>{{issue.issue_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="button" class="btn btn-sm add_issue" data-cs-toggle="modal" data-cs-target="#addIssueModal">Edit issue</button>
+                                </div>
+                                <div class="spares-list-edit">
+
+                                </div>
+                                <div class="text-end mt-2">
+                                    <button type="button" class="btn btn-danger rounded-pill booking-btn delete-booking-button">Delete</button>
+                                    <button type="button" class="btn btn-success rounded-pill booking-btn update-booking-button">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <h3>Customer Responses</h3>
+                            <div class="customer-responses">
+    
+                            </div>
+                            <div class="payment-details">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h3>Order summary</h3><hr>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="balance">Balance Amount</div>
+                                            <div class="edit-balance-amount fw-bold fs-5"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <div class="advance">Advance Amount</div>
+                                            <div class="edit-advance-amount fw-bold fs-5"></div>
+                                        </div><hr>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="total">Total Amount</div>
+                                            <div class="edit-total-amount fw-bold fs-4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'serviceapp/auth/back_to_dashboard.html' %}
+    {% include 'serviceapp/auth/add_issue_modal.html' %}
+{% endblock %}

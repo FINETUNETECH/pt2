@@ -1,0 +1,294 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% load static %}
+{% block 'content' %}
+{{ request.user.phone|json_script:"user_phone" }}
+<main class="page-content">
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" data-bs-toggle="pill" href="#primary-pills-home" role="tab" aria-selected="true">
+                <div class="d-flex align-items-center">
+                    <div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
+                    </div>
+                    <div class="tab-title">Request</div>
+                </div>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="edit_spare_tab" data-bs-toggle="pill" href="#primary-pills-profile" role="tab" aria-selected="false">
+                <div class="d-flex align-items-center">
+                    <div class="tab-icon"><i class="bx bx-user-pin font-18 me-1"></i>
+                    </div>
+                    <div class="tab-title">Edit Spare</div>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="primary-pills-home" role="tabpanel">
+            <p>
+                <div class="row align-items-stretch justify-content-stretch">
+                    {% if requests %}
+                    
+                        {% for request in requests %}
+                            <div class="col-lg-4 col-md-6 g-2">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <button type="button" data-id="{{request.id}}" class="btn-close card-close btn-sm position-absolute end-6 top-6" aria-label="Close"></button>
+                                        <div class="row g-0">
+                                            <div class="col-6 g-0">
+                                                <input type="text" class="brandInput form-control" placeholder="Enter Brand" value="{{request.brand}}">
+                                                <h5 class="w-100 brand">{{request.brand}}</h5>-
+                                                <input type="text" id="modelInput" class="modelInput sm-text-field" placeholder="Enter Product Model" value="{% if request.model %}{{request.model}}{% else %}{{request.product.name}}{% endif %}" autocomplete="off">
+                                                <span class="model">{% if request.model %}{{request.model}}{% else %}{{request.product.name}}{% endif %}</span> -
+                                                <span class="modelno">{%if request.product%}{{request.product.model_no}}{% elif request.model_no %}{{request.model_no}}{% else %}Enter Model no{% endif %}</span>
+                                                <input type="text" class="modelnoInput" value="{%if request.product%}{{request.product.model_no}}{% elif request.model_no %}{{request.model_no}}{% else %}{% endif %}" placeholder="Enter Model No*" style="width:50%">  
+                                            </div>
+                                            <div class="col-2 g-0">
+                                                <select class="border-0 display_type">
+                                                    {% if request.product %}
+                                                        {% for spares in request.product.spare_set.all %}
+                                                            {% if spares.name|lower == 'display' %}
+                                                                <option value="LED" {% if spares.type.type|lower == 'LED'|lower %}selected{% endif %}>LED</option>
+                                                                <option value="LCD" {% if spares.type.type|lower == 'LCD'|lower %}selected{% endif %}>LCD</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                            <option value="LED">LED</option>
+                                                            <option value="LCD">LCD</option>
+                                                    {% endif %}
+                                                    
+                                                </select>
+                                            </div>
+                                            <div class="col-1 g-0" style="z-index:10;">
+                                                <select class="border-0 charger_port_type">
+                                                    {% if request.product %}
+                                                        {% for spares in request.product.spare_set.all %}
+                                                            {% if spares.name|lower == 'charger port' %}
+                                                                {% with spares.spare_variety.all|first as charger_spare %}
+                                                                    <option value="V8" {% if charger_spare|lower == 'V8'|lower %}selected{% endif %}>V8</option>
+                                                                    <option value="TYPE C" {% if charger_spare|lower == 'TYPE C'|lower %}selected{% endif %}>TYPE C</option>
+                                                                {% endwith %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <option value="V8">V8</option>
+                                                        <option value="TYPE C">TYPE C</option>
+                                                    {% endif %}
+                                                </select>
+                                            </div>
+                                            <div class="col-3 mt-1 mx-auto w-auto g-0">
+                                                <span class="badge-position badge request_issue rounded-pill bg-primary ms-auto">Spares</span>
+                                                <span class="badge-position badge rounded-pill bg-danger ms-auto">{{request.user}}</span>
+                                                <input type="hidden" class="user_name" name="" value="{{request.user}}">
+                                            </div>
+                                        </div>
+                                        <form class="mt-1" action="">
+                                                {% if request.product %}
+                                                    <!-- Autofilling the form if product available -->
+                                                    {% with request.product.spare_set.all|first as selectedspare %}
+                                                        {% comment %} {% if selectedspare.name|lower == 'display' and selectedspare.spare_variety.all|length  %} {% endcomment %}
+                                                        {% if selectedspare.spare_variety.all|length  %}
+                                                            {% for spare in request.product.spare_set.all %}
+                                                                {% if spare.name|lower == 'display'|lower %}
+                                                                    {% for quality in spare.spare_variety.all %}
+                                                                        <div class="row g-0 quality-input rows-{{forloop.counter0}}">
+                                                                            <div class="col-6 g-1">
+                                                                                <input type="text" class="form-control form-control-sm quality quality-{{forloop.counter0}}" id="quality" placeholder="Quality" value="{{quality.quality}}">
+                                                                            </div>
+                                                                            <div class="col-6 g-1">
+                                                                                <input type="number" class="form-control form-control-sm price" id="price" placeholder="Price" min="1" value="{{quality.purchase_price}}">
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                                {% if spare.name|lower == 'battery'|lower %}
+                                                                    {% for quality in spare.spare_variety.all %}
+                                                                        <div class="row g-0 mah-input">
+                                                                            <div class="col-6 g-1">
+                                                                                <input type="text" class="form-control form-control-sm" id="" placeholder="Battery (MAH)" value="Battery (MAH)" disabled>
+                                                                            </div>
+                                                                            <div class="col-6 g-1">
+                                                                                <input type="number" class="form-control form-control-sm battery_mah" placeholder="MAH" min="1" value="{{quality.property.property_value}}">
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                             
+                                                            <div class="row g-0 year-input">
+                                                                <div class="col-6 g-1">
+                                                                    <input type="text" class="form-control form-control-sm" id="" placeholder="Release year" value="Release year" disabled>
+                                                                </div>
+                                                                <div class="col-6 g-1">
+                                                                        {% comment %} {{request.product.release_year}} {% endcomment %}
+                                                                        <select type="number" class="form-control form-control-sm release_year" placeholder="Year" min="1"> 
+                                                                            <option value="" disabled>Select year</option>
+                                                                            <option value="2006" {% if request.product.release_year == 2006 %}selected{% endif %}>2006</option>
+                                                                            <option value="2007" {% if request.product.release_year == 2007 %}selected{% endif %}>2007</option>
+                                                                            <option value="2008" {% if request.product.release_year == 2008 %}selected{% endif %}>2008</option>
+                                                                            <option value="2009" {% if request.product.release_year == 2009 %}selected{% endif %}>2009</option>
+                                                                            <option value="2010" {% if request.product.release_year == 2010 %}selected{% endif %}>2010</option>
+                                                                            <option value="2011" {% if request.product.release_year == 2011 %}selected{% endif %}>2011</option>
+                                                                            <option value="2012" {% if request.product.release_year == 2012 %}selected{% endif %}>2012</option>
+                                                                            <option value="2013" {% if request.product.release_year == 2013 %}selected{% endif %}>2013</option>
+                                                                            <option value="2014" {% if request.product.release_year == 2014 %}selected{% endif %}>2014</option>
+                                                                            <option value="2015" {% if request.product.release_year == 2015 %}selected{% endif %}>2015</option>
+                                                                            <option value="2016" {% if request.product.release_year == 2016 %}selected{% endif %}>2016</option>
+                                                                            <option value="2017" {% if request.product.release_year == 2017 %}selected{% endif %}>2017</option>
+                                                                            <option value="2018" {% if request.product.release_year == 2018 %}selected{% endif %}>2018</option>
+                                                                            <option value="2019" {% if request.product.release_year == 2019 %}selected{% endif %}>2019</option>
+                                                                            <option value="2020" {% if request.product.release_year == 2020 %}selected{% endif %}>2020</option>
+                                                                            <option value="2021" {% if request.product.release_year == 2021 %}selected{% endif %}>2021</option>
+                                                                            <option value="2022" {% if request.product.release_year == 2022 %}selected{% endif %}>2022</option>
+                                                                            <option value="2023" {% if request.product.release_year == 2023 %}selected{% endif %}>2023</option>
+                                                                            <option value="2024" {% if request.product.release_year == 2024 %}selected{% endif %}>2024</option>
+                                                                            <option value="2025" {% if request.product.release_year == 2025 %}selected{% endif %}>2025</option>
+                                                                        </select>
+                                                                </div>
+                                                            </div>
+                                                        {% else %}
+                                                        <div class="row g-0 quality-input rows-0">
+                                                            <div class="col-6 g-1">
+                                                                <input type="text" class="form-control form-control-sm quality quality-1" id="" placeholder="Quality">
+                                                            </div>
+                                                            <div class="col-6 g-1">
+                                                                <input type="number" class="form-control form-control-sm price" id="price" placeholder="Price" min="1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row g-0 quality-input rows-1">
+                                                            <div class="col-6 g-1">
+                                                                <input type="text" class="form-control form-control-sm quality quality-2" id="" placeholder="Quality">
+                                                            </div>
+                                                            <div class="col-6 g-1">
+                                                                <input type="number" class="form-control form-control-sm price quality-1" id="price" placeholder="Price" min="1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row g-0 quality-input rows-2">
+                                                            <div class="col-6 g-1">
+                                                                <input type="text" class="form-control form-control-sm quality" id="" placeholder="Quality">
+                                                            </div>
+                                                            <div class="col-6 g-1">
+                                                                <input type="number" class="form-control form-control-sm price" id="price" placeholder="Price" min="1">
+                                                            </div>
+                                                        </div>
+                                                        {% endif %}
+                                                        
+                                                        
+                                                        
+
+                                                    {% endwith %} 
+                    
+                                                {% else %}
+
+                                                    <div class="row g-0 quality-input rows-0">
+                                                        <div class="col-6 g-1">
+                                                            <input type="text" class="form-control form-control-sm quality quality-1" id="" placeholder="Quality">
+                                                        </div>
+                                                        <div class="col-6 g-1">
+                                                            <input type="number" class="form-control form-control-sm price" id="price" placeholder="Price" min="1">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row g-0 quality-input rows-1">
+                                                        <div class="col-6 g-1">
+                                                            <input type="text" class="form-control form-control-sm quality quality-2" id="" placeholder="Quality">
+                                                        </div>
+                                                        <div class="col-6 g-1">
+                                                            <input type="number" class="form-control form-control-sm price quality-1" id="price" placeholder="Price" min="1">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row g-0 quality-input rows-2">
+                                                        <div class="col-6 g-1">
+                                                            <input type="text" class="form-control form-control-sm quality" id="" placeholder="Quality">
+                                                        </div>
+                                                        <div class="col-6 g-1">
+                                                            <input type="number" class="form-control form-control-sm price" id="price" placeholder="Price" min="1">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row g-0 mah-input">
+                                                        <div class="col-6 g-1">
+                                                            <input type="text" class="form-control form-control-sm" id="" placeholder="Battery (MAH)" value="Battery (MAH)" disabled>
+                                                        </div>
+                                                        <div class="col-6 g-1">
+                                                            <input type="number" class="form-control form-control-sm battery_mah" placeholder="MAH" min="1">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row g-0 year-input">
+                                                        <div class="col-6 g-1">
+                                                            <input type="text" class="form-control form-control-sm" id="" placeholder="Release year" value="Release year" disabled>
+                                                        </div>
+                                                        <div class="col-6 g-1">
+                                                            <select type="number" class="form-control form-control-sm release_year" placeholder="Year" min="1"> 
+                                                                {% comment %} {{request.product.release_year}} {% endcomment %}
+                                                                    <option value="">Select year</option>
+                                                                    <option value="2006" {% if request.product.release_year == 2006 %}selected{% endif %}>2006</option>
+                                                                    <option value="2007" {% if request.product.release_year == 2007 %}selected{% endif %}>2007</option>
+                                                                    <option value="2008" {% if request.product.release_year == 2008 %}selected{% endif %}>2008</option>
+                                                                    <option value="2009" {% if request.product.release_year == 2009 %}selected{% endif %}>2009</option>
+                                                                    <option value="2010" {% if request.product.release_year == 2010 %}selected{% endif %}>2010</option>
+                                                                    <option value="2011" {% if request.product.release_year == 2011 %}selected{% endif %}>2011</option>
+                                                                    <option value="2012" {% if request.product.release_year == 2012 %}selected{% endif %}>2012</option>
+                                                                    <option value="2013" {% if request.product.release_year == 2013 %}selected{% endif %}>2013</option>
+                                                                    <option value="2014" {% if request.product.release_year == 2014 %}selected{% endif %}>2014</option>
+                                                                    <option value="2015" {% if request.product.release_year == 2015 %}selected{% endif %}>2015</option>
+                                                                    <option value="2016" {% if request.product.release_year == 2016 %}selected{% endif %}>2016</option>
+                                                                    <option value="2017" {% if request.product.release_year == 2017 %}selected{% endif %}>2017</option>
+                                                                    <option value="2018" {% if request.product.release_year == 2018 %}selected{% endif %}>2018</option>
+                                                                    <option value="2019" {% if request.product.release_year == 2019 %}selected{% endif %}>2019</option>
+                                                                    <option value="2020" {% if request.product.release_year == 2020 %}selected{% endif %}>2020</option>
+                                                                    <option value="2021" {% if request.product.release_year == 2021 %}selected{% endif %}>2021</option>
+                                                                    <option value="2022" {% if request.product.release_year == 2022 %}selected{% endif %}>2022</option>
+                                                                    <option value="2023" {% if request.product.release_year == 2023 %}selected{% endif %}>2023</option>
+                                                                    <option value="2024" {% if request.product.release_year == 2024 %}selected{% endif %}>2024</option>
+                                                                    <option value="2025" {% if request.product.release_year == 2025 %}selected{% endif %}>2025</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% comment %} <button class="d-block btn btn-sm mt-3 p-0 link-primary new-btn" type="button">+ Add New</button> {% endcomment %}
+                                            <div class="text-center position-relative">
+                                                <span class="id d-none">{{request.id}}</span>
+                                                <button type="submit" class="bottom-0 mt-3 btn btn-sm btn-primary spare-submit-2">Add</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% else %}
+                        <p>Sorry no requests!</p>
+                    {% endif %}
+                </div>
+            </p>
+        </div>
+        <div class="tab-pane fade" id="primary-pills-profile" role="tabpanel">
+            <div class="container">
+                <form action="">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control mb-3 search_brand" name="" placeholder="Enter Brand" id="brandInput" autocomplete="off">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control mb-3 search_product" name="" placeholder="Enter Model" id="productInput" autocomplete="off">
+                        </div>
+                        <div class="col-md-12">
+                            <select class="form-control issueselect" list="issuelist" id="issueselect" placeholder="Select Issue" required>
+                                <option value="" selected disabled>Please select issue*</option>
+                                <option value="Display"> Display </option>
+                                <option value="Battery"> Battery </option>
+                                <option value="Charger Port"> Charger Port </option> 
+                            </select>
+                        </div>
+                        <div class="col-md-12 mt-2 text-center">
+                            <button type="button" class="btn btn-sm btn-success get_spare">Get Spare</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="row spare-results-container">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% include 'serviceapp/auth/back_to_dashboard.html' %}
+{% endblock 'content' %}

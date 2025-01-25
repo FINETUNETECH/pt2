@@ -1,0 +1,44 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% block 'content' %}
+<style>
+    .btn-check:focus+.btn, .btn:focus {
+        box-shadow: none;
+    }
+</style>
+<main class="page-content">
+    <h1 class="mb-4">Question sets</h1>
+    <div class="row">
+        {% for each_question in question_set %}
+            <div class="col-md-4">
+                <div class="card" onclick="fillQuestion('{{each_question.qs}}')" data-bs-toggle="modal" data-bs-target="#question_modal">
+                    <div class="card-body">
+                        Question set
+                        <h5>{{each_question.question_set}}</h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</main>
+<!-- Modal -->
+<div class="modal fade" id="question_modal" tabindex="-1" aria-labelledby="question_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content ">
+        <div class="modal-header">
+          <h5 class="modal-title" id="question_modalLabel">Questions</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div style="max-width: 950px; margin:auto;">
+               <div class="question_list"></div>
+               <input type="text" style="width:80%;" class="new-question-input form-control float-start" placeholder="New Question">
+               <button style=" width: 19%;" class="d-block position-relative btn btn-danger add-new-question float-end">Add</button>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

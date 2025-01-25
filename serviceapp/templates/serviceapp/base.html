@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoneTreat - Finetune | We don't just repair, just finetune it </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'service/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'service/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'service/css/owl.theme.default.min.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'index' %}">
+              <img class="ms-4" src="{% static 'service/images/ml1.png' %}" height="80" width="120" alt="">
+          </a>
+          <button class="navbar-toggler" id="menu_btn" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto ms-5 mb-2 mb-lg-0">
+              <li class="nav-item ms-3">
+                <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+              </li>
+              <li class="nav-item ms-3">
+                <a class="nav-link" href="{% url 'about' %}">About</a>
+              </li>
+              <li class="nav-item ms-3">
+                <a class="nav-link" href="#" role="button" >
+                  Mobile & Accessories
+                </a>
+              </li>
+              <li class="nav-item ms-3">
+                <a class="nav-link" href="{% url 'locate' %}" role="button" >
+                  Locate us
+                </a>
+              </li>
+              <li class="nav-item ms-3">
+                <a class="nav-link" href="{% url 'contact' %}" role="button" >
+                  Contact
+                </a>
+              </li>
+            </ul>
+            {% if not user.is_authenticated %}
+              <button class="btn rounded-pill btn-primary-color me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
+              {% comment %} <button class="btn rounded-pill btn-primary-color me-4" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button> {% endcomment %}
+            {% else %}
+                <div class="dropdown">
+                    <button class="btn user-drop-down rounded-pill dropdown-toggle align-middle primary-lg-btn" id="userNavMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img class="rounded img-fluid" src="{% static 'service/images/user.png' %}" alt="user icon" width="25" height="25">
+                        <span class="align-middle px-2">{{user}}</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="userNavMenu">
+                      {% for group in request.user.groups.all %}
+                        {% if request.user.is_superuser or group.name == 'Manager'%}
+                          <li><a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a></li>
+                        {% endif %}
+                      {% endfor %}
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                      </ul>
+                </div>
+            {% endif %}
+          </div>
+        </div>
+    </nav>
+    <main>
+        {% block 'content' %}{% endblock %}
+    </main>
+    <footer class="footer">
+        <div class="container py-3 ">
+            <div class="row justify-content-center align-items-center text-center">
+                <div class="col-lg-4">
+                    <ul class="d-flex flex-row justify-content-center link-list-top">
+                        <li class="px-3"><a href="{% url 'about' %}">About</a></li>
+                        <li class="px-3"><a href="">Policy</a></li>
+                        <li class="px-3"><a href="{% url 'terms' %}">Terms</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <a class="navbar-brand" href="#">
+                        <img class="text-center ms-4" src="{% static 'service/images/ml1.png' %}" height="80" width="120" alt="">
+                    </a>
+                    <div class="sub py-2 text-center">Don't just repair, <br> Finetune it.</div>
+                </div>
+                <div class="col-lg-4">
+                    <ul class="d-flex flex-row h-center justify-content-center link-list-btm">
+                        <li class="px-3"><a href="">Contact</a></li>
+                        <li class="px-3"><a href=""><i class="fa fa-facebook" aria-hidden="true"></i>                        </i>
+                        <li class="px-3"><a href=""><i class="fab fa-instagram"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Mobile menu  -->
+    <div id="bg-black" class="bg-black">
+      <i id="close" class="far fa-times-circle"></i>
+    </div>
+    <div id="mobile-menu" class="mobile-menu">
+      <div class="login-pallete">
+        {% if user.is_authenticated %}
+          <div class="dropdown">
+            <button id="userMenuBtn" class="btn menu-logged-user py-5 border-bottom d-block w-100 user-drop-down dropdown-toggle align-middle">
+                <img class="rounded img-fluid" src="{% static 'service/images/user.png' %}" alt="user icon" width="25" height="25">
+                <span class="align-middle px-2">{{user}}</span>
+            </button>
+            <ul class="menu-dropdown-user w-100 dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+            </ul> 
+          </div>
+        {% endif %}
+      </div>
+      <ul class="pt-5">
+        <li><a class="py-3" href="">Home</a></li>
+        <li><a class="py-3" href="">About</a></li>
+        <li><a class="py-3" href="">Mobile & Accessories</a></li>
+        <li><a class="py-3" href="">Locate us</a></li>
+        <li><a class="py-3" href="">Contact</a></li>
+      </ul>
+      {% if not user.is_authenticated %}
+        <button class="d-block w-100 btn rounded-pill btn-primary-color me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
+        <button class="d-block w-100 btn rounded-pill btn-primary-color mt-3 me-4" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+      {% endif %}
+    </div>
+    {% include 'serviceapp/availability_modal.html' %}
+    {% include 'serviceapp/login_modal.html' %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'service/js/datedropper-jquery.js' %}"></script>
+    <script src="{% static 'service/js/timedropper-jquery.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/0f2c2c715f.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'service/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'service/js/main.js' %}"></script>
+    {% if messages %}
+      {% for message in messages %}
+        <script>
+          var new_message = "{{message}}"
+          Swal.fire(
+            new_message,
+            '',
+            'success'
+          )
+        </script>
+      {% endfor %}
+{% endif %}
+</body>
+</html>

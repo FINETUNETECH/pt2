@@ -1,0 +1,229 @@
+{% extends 'serviceapp/base.html' %}
+{% load static %}
+{% block 'content' %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="d-flex flex-column justify-content-center pt-5 mt-5">
+                <h1 class="main-quote">
+                    Get Service At <br> your <br> door step
+                </h1>
+                <div class="action-button mt-5">
+                    <button class="btn btn-lg rounded-pill" data-bs-toggle="modal" data-bs-target="#availabilityModal">
+                        Book now
+                        <span class="rounded-circle book-now-left">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </button>
+                    <a class="ps-2 cursor-pointer" data-bs-toggle="modal" data-bs-target="#scheduleCallModal">Schedule a call</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="bg-pattern"></div>
+            <img class="main-mobile img-fluid" src="{% static 'service/images/mobile_illus.svg' %}" alt="" height="550">
+        </div>
+    </div>
+</div>
+<!-- Second Section -->
+<section class="container care-section my-5 mb-5 pb-5">
+    <div class="row">
+        <div class="col-lg-3 col-sm-6 m-0 p-0">
+            <div class="card h-100 border-left first py-5 px-5">
+                <i class="far fa-calendar-check"></i>
+                <h2 class="pt-2 pb-4">Book</h2>
+                <div class="content">
+                    Book us with ease through App
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 m-0 p-0">
+            <div class="card h-100 py-5 px-5 second border-right">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h2 class="pt-2 pb-4">Care</h2>
+                <div class="content">
+                    We pickup your order with care. And give atmost precise service for your device.
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 m-0 p-0">
+            <div class="card h-100 py-5 px-5 third border-right">
+                <i class="fas fa-tools"></i>
+                <h2 class="pt-2 pb-4">FineTune</h2>
+                <div class="content">
+                    We finetune our service for each and every works.
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 m-0 p-0">
+            <div class="card h-100 last py-5 px-5">
+                <i class="fas fa-tools"></i>
+                <h2 class="pt-2 pb-4">Delivery</h2>
+                <div class="content">
+                    Once the order is completed will notify and deliver with full care.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="trust-section mt-5">
+    <div class="container trust-inner-container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class= "trust-left mt-5 d-flex flex-column justify-content-center">
+                    <h3 class="fw-bolder">Trust. Quality. Service</h3>
+                    <p>
+                        We earn trust of our customers with quality and speedy service. We provide service to all our nearby areas. please refer our outlet address for the best communication.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class= "trust-right mt-5 pt-5 d-flex flex-column align-items-center justify-content-center">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.048636922242!2d76.90755181460692!3d10.883905392248625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba85cac2b10ccf9%3A0x13cfec71425cc8a3!2sFineTune!5e0!3m2!1sen!2sin!4v1642964889913!5m2!1sen!2sin" width="500" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonial -->
+<section class="testimonials my-5 pt-3">
+    <div class="container">
+        <h2 class="text-center py-4 fw-bolder">Our Customers Say</h2>
+            <div class="owl-carousel testimonial-carousel owl-theme">
+                <div class="item testimonial-items">
+                    <div class="card px-2 py-4 h-100">
+                        <div class="row">
+                            <div class="testimonial-name fw-bolder col-7">
+                                Sukumar M
+                            </div>
+                            <div class="col-5 text-end">
+                                <div class="rating rounded-pill">
+                                    <i class="fas fa-star"></i> 5.0
+                                </div>
+                            </div>
+                        </div>
+                        <p class="testimonial-content">“The best near kgChavadi my Lenovo phone network issue fixed here nice..”</p>
+                    </div>
+                </div>
+                <div class="item testimonial-items">
+                    <div class="card px-2 py-4 h-100">
+                        <div class="row">
+                            <div class="testimonial-name fw-bolder col-7">
+                                Shamili krishnaraj
+                            </div>
+                            <div class="col-5 text-end">
+                                <div class="rating rounded-pill">
+                                    <i class="fas fa-star"></i> 5.0
+                                </div>
+                            </div>
+                        </div>
+                        <p class="testimonial-content">“Thank you so much sir..I did not really think I'll get my mob back after
+                            a car has run over it.. and... it now looks like brand new mob with all my data back.. very happy.. Thank you”</p>
+                    </div>
+                </div>
+                <div class="item testimonial-items">
+                    <div class="card px-2 py-4 h-100">
+                        <div class="row">
+                            <div class="testimonial-name fw-bolder col-7">
+                                Thamilarasan R
+                            </div>
+                            <div class="col-5 text-end">
+                                <div class="rating rounded-pill">
+                                    <i class="fas fa-star"></i> 5.0
+                                </div>
+                            </div>
+                        </div>
+                        <p class="testimonial-content">“Very good service. Good customer satisfaction. They are making commitments and doing it properly and immediately. Thank you keep doing &#128077;”</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="videos my-5 mb-5 pb-5 pt-3">
+    <div class="container">
+        <h2 class="text-center py-4 mb-3 fw-bolder">Our Videos</h2>
+        <div class="owl-carousel videos-carousel owl-theme">
+            <div class="item video-items">
+                <div class="card px-2 py-4 h-100 mb-1">
+                    <iframe src="https://www.youtube.com/embed/09pkghrV2A8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="container py-2">
+                        Vivo y90 (1908) pattern password frp unlock - miracle box - new boot - 100% success
+                    </div>
+                </div>
+            </div>
+            <div class="item video-items">
+                <div class="card px-2 py-4 h-100">
+                    <iframe src="https://www.youtube.com/embed/kMOuIzrZPzU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="container py-2">
+                        POCO C3 - MI Account & FRP unlock using SP flash tool - All Mediatek - Redmi - offline - UMT
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="keep-in-touch my-5">
+    <div class="container">
+        <div class="d-flex flex-row justify-content-center align-items-center card border-0 pt-2">
+            <p class="touch-news pt-2">
+                <img class="mic-img pe-2" src="{% static 'service/images/mic.png' %}" alt="contact mic" height="60" width="65">
+                Keep in touch with us for the latest updates and newsletters by clicking here 
+            </p>
+            <div class="float-right ps-2 arrow-container">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </div>
+    </div>
+</section>
+{% comment %} Schedule Modal {% endcomment %}
+
+<!-- Modal -->
+<div class="modal fade" id="scheduleCallModal" tabindex="-1" aria-labelledby="scheduleCallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="scheduleCallModalLabel">Schedule a call</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="schedule_date_form">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="Name" id="sche_name" name="schedule_name" required>
+                            <label for="sche_name">Name*</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" placeholder="Schedule date" id="scheduledate" name="schedule_date" data-dd-format="S M Y" required>
+                            <label for="scheduledate">Schedule Date</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input id="timePicker" type="text" class="form-control" placeholder="Schedule date" name="schedule_time" required>
+                            <label for="timePicker">Schedule Time</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating">
+                            <textarea class="form-control" name="message" placeholder="Enter your message here (Optional)" id="scheduleMessage" cols="30" rows="10"></textarea>
+                            <label for="scheduleMessage">Enter your message here (Optional)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-5">
+                        <button type="submit" id="schedule_btn" class="d-block w-100 btn rounded-pill btn-primary-color me-4">Schedule</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock  %}
+    

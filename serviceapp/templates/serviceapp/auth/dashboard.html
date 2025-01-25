@@ -1,0 +1,124 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% load static %}
+{% block 'content' %}
+    <main class="page-content">
+        <h6 class="mb-3">Welcome {% if request.user.name != 'Anonymous' %}{{request.user.name}},{% else %}{{request.user.phone}},{% endif %} <span class="store"></span></h6>
+        <div class="row">
+            <div class="col">
+                <div class="card overflow-hidden radius-10">
+                    <div class="card-body">
+                     <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
+                      <div class="w-50">
+                        <p>Total Brands</p>
+                        <h4 class="">{{brand_count}}</h4>
+                      </div>
+                      <div class="w-50" style="position: relative;">
+                         {% comment %} <p class="mb-3 float-end text-success">+ 16% <i class="bi bi-arrow-up"></i></p> {% endcomment %}
+                      <div class="resize-triggers"><div class="expand-trigger"><div style="width: 154px; height: 74px;"></div></div><div class="contract-trigger"></div></div></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card overflow-hidden radius-10">
+                    <div class="card-body">
+                     <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
+                      <div class="w-50">
+                        <p>Total Products</p>
+                        <h4 class="">{{product_count}}</h4>
+                      </div>
+                      <div class="w-50" style="position: relative;">
+                         {% comment %} <p class="mb-3 float-end text-success">+ 16% <i class="bi bi-arrow-up"></i></p> {% endcomment %}
+                      <div class="resize-triggers"><div class="expand-trigger"><div style="width: 154px; height: 74px;"></div></div><div class="contract-trigger"></div></div></div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-start justify-content-md-center g-2 g-md-3">
+            <div class="col-md-3 col-sm-4 col-4">
+                <a href="{% url 'bookings' %}" class="card py-3 text-dark radius-10 mb-0">
+                    <div class="card-body py-md-5 py-1 px-md-2 px-1">
+                        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                            <i class="bx bx-basket fs-1"></i>
+                            <p class="fs-5 fs-sm-1 fw-bold">Bookings</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% if request.user.is_superuser %}
+                <div class="col-md-3 col-sm-4 col-4">
+                    <a href="{% url 'pricemaintanence' %}?edit_tab=true" class="card py-3 text-dark radius-10 mb-0">
+                        <div class="card-body py-md-5 py-1 px-md-2 px-1">
+                            <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                                <i class="bx bx-edit fs-1"></i>
+                                <p class="fs-5 fs-sm-1 fw-bold">Edit Spares</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% else %}
+                <div class="col-md-3 col-sm-4 col-4">
+                    <a href="{% url 'pricecheck' %}?edit_tab=true" class="card py-3 text-dark radius-10 mb-0">
+                        <div class="card-body py-md-5 py-1 px-md-2 px-1">
+                            <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                                <i class="bx bx-edit fs-1"></i>
+                                <p class="fs-5 fs-sm-1 fw-bold">Price Check</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+            <div class="col-md-3 col-sm-4 col-4">
+                <a href="{% url 'adduser' %}" class="card py-3 text-dark radius-10 mb-0">
+                    <div class="card-body py-md-5 py-1 px-md-2 px-1">
+                        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                            <i class="bx bx-user-check fs-1"></i>
+                            <p class="fs-5 fs-sm-1 fw-bold">Edit User</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-4 col-4">
+                <a href="{% url 'orders' %}" class="card py-3 text-dark radius-10 mb-0 h-100">
+                    <div class="card-body py-md-5 py-1 px-md-2 px-1">
+                        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                            <i class="bx bx-shopping-bag fs-1"></i>
+                            <p class="fs-5 fs-sm-1 fw-bold">Orders</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-4 col-4">
+                <a href="{% url 'pricemaintanence' %}" class="card py-3 text-dark radius-10 mb-0">
+                    <div class="card-body py-md-5 py-1 px-md-2 px-1">
+                        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                            <i class="bx bx-spreadsheet fs-1"></i>
+                            <p class="fs-5 fs-sm-1 fw-bold text-center">Price Requests</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-4 col-4">
+                <a href="{% url 'productmanager' %}" class="card py-3 text-dark radius-10 mb-0">
+                    <div class="card-body py-md-5 py-1 px-md-2 px-1">
+                        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                            <i class="bx bx-package fs-1"></i>
+                            <p class="fs-5 fs-sm-1 fw-bold text-center">Product Manager</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-4 col-4">
+                <a href="{% url 'tasks' %}" class="card py-3 text-dark radius-10 mb-0">
+                    <div class="card-body py-md-5 py-1 px-md-2 px-1">
+                        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                            <i class="bx bx-check-double fs-1"></i>
+                            <p class="fs-5 fs-sm-1 fw-bold">Tasks</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+{% endblock %}

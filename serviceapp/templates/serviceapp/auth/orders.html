@@ -1,0 +1,198 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% block 'content' %}
+{% load static %}
+
+<main class="page-content">
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" data-bs-toggle="pill" href="#orders" data-link="Bookings" role="tab" aria-selected="true">
+                <div class="d-flex align-items-center">
+                    <div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
+                    </div>
+                    <div class="tab-title">Orders</div>
+                </div>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="edit_spare_tab" data-bs-toggle="pill" href="#verified_orders" data-link="Confirmed Orders" role="tab" aria-selected="false">
+                <div class="d-flex align-items-center">
+                    <div class="tab-icon"><i class="bx bx-user-pin font-18 me-1"></i>
+                    </div>
+                    <div class="tab-title">Verified Orders</div>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="orders" role="tabpanel">
+          <div class="initial-booking row align-items-stretch justify-content-stretch">
+
+          </div>
+        </div>
+        <div class="tab-pane fade" id="verified_orders" role="tabpanel">
+          <div class="initial-booking row align-items-stretch justify-content-stretch">
+
+          </div>
+        </div>
+    </div>
+</main>
+<!--Modal for edit orders-->
+<div class="modal fade" id="booking_detail_modal" tabindex="-1" data-bs-focus="false" aria-labelledby="booking_detail_modal_label"
+  aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="booking_detail_modal_label">Booking Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container bookings first-stage-booking">
+          <div class="row">
+
+            <div class="col-md-6">
+              <form method="post">
+                {% csrf_token %}
+                <div class="col-12 mb-2 form-floating">
+                  <input class="form-control" type="text" name="" id="bookedmobno" placeholder="Mobile No*"
+                    maxlength="10" required>
+                  <label for="bookedmobno">Mobile No*</label>
+                </div>
+                <div class="col-12 mb-2 form-floating">
+                  <input class="form-control" type="text" name="" id="bookedalternatebookingno"
+                    placeholder="Alternate Mobile No*" maxlength="10">
+                  <label for="bookedalternatebookingno">Alternate Mobile No*</label>
+                </div>
+                <div class="col-12 mb-2 form-floating">
+                  <input class="form-control" type="text" name="" id="bookedname" placeholder="Name*" required>
+                  <label for="bookedname">Name*</label>
+                </div>
+                <div class="col-12 mb-2 form-floating">
+                  <input class="form-control py-4 edit-brand-ip" type="text" id="bookedbrand" name=""
+                    placeholder="Brand*" autocomplete="off" required>
+                </div>
+                <div class="col-12 mb-2 form-floating">
+                  <input class="form-control py-4 edit-product-ip" id="bookedProduct" type="text" name=""
+                    placeholder="Product*" autocomplete="off" required>
+                </div>
+                <div class="col-12 mb-2 form-floating">
+                  <input class="form-control" type="text" name="" id="booked_mobile_pin" placeholder="Mobile password"
+                    maxlength="25">
+                  <label for="booked_mobile_pin">Mobile password</label>
+                </div>
+                <div class="col-12 mb-2">
+                  <select id="selectedissuetext" class="selectedissuetext" multiple="multiple" data-issue-selected="selected_issues" required>
+                    {% for issue in issues %}
+                    <option value="{{issue.issue_name}}" data-id={{issue.id}}>{{issue.issue_name}}</option>
+                    {% endfor %}
+                  </select>
+                  <button type="button" class="btn btn-sm add_issue" data-cs-toggle="modal" data-cs-target="#addIssueModal">Edit issue</button>
+                </div>
+                <div class="spares-list-edit">
+
+                </div>
+                <div class="col-12 mt-3 mb-2">
+                  <input class="form-check-input" type="checkbox" value="" id="verified_checkbox">
+                  <label class="form-check-label" for="verified_checkbox">
+                    Mark as verified
+                  </label>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <h3>Customer Responses</h3>
+              <div class="detail-customer-responses">
+
+              </div>
+              <div class="payment-details">
+                <div class="card">
+                    <div class="card-body">
+                        <h3>Order summary</h3><hr>
+                        <div class="d-flex justify-content-between">
+                            <div class="balance">Balance Amount</div>
+                            <div class="edit-balance-amount fw-bold fs-5"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <div class="advance">Advance Amount</div>
+                            <div class="edit-advance-amount fw-bold fs-5"></div>
+                        </div><hr>
+                        <div class="d-flex justify-content-between">
+                            <div class="total">Total Amount</div>
+                            <div class="edit-total-amount fw-bold fs-4"></div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer bottom-0">
+            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger rounded-pill booking-btn delete-booking-button">Delete</button>
+            <button type="submit" class="btn btn-success rounded-pill save_booking_update save_detail_updates">Save & Next</button>
+          </div>
+        </div>
+        <div class="container bookings verified-bookings">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Mobile no: <div class="fw-bolder con_mobile_no"></div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Alternate Mobile no: <div class="fw-bolder con_alter_mobile_no"></div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Customer Name: <div class="fw-bolder con_name"></div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Issues: <div class="fw-bolder con_issues"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Brand: <div class="fw-bolder con_brand"></div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Product | Model: <div class="fw-bolder con_product"></div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Mobile Password: <div class="fw-bolder con_mobile_pin"></div>
+              </div>
+            </div>
+          </div>
+          <div class="remarks">
+            <form action="">
+              <div class="input mb-2">
+                <input class="form-check-input" type="checkbox" value="" id="markInProgress">
+                <label class="form-check-label" for="markInProgress">
+                  Mark as in progress
+                </label>
+              </div>
+              <textarea id="verified_remarks" class="form-control verified_remarks" name="remarks" id="" rows="5" placeholder="Enter Remarks (optional)"></textarea>
+              <div class="modal-footer bottom-0">
+                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger rounded-pill booking-btn delete-booking-button">Delete</button>
+                <button type="submit" class="btn btn-success rounded-pill save_detail_updates save_progress save_verified_progress">Save changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{% static 'serviceAdmin/js/fetch_book.js' %}"></script>
+{% include 'serviceapp/auth/back_to_dashboard.html' %}
+{% include 'serviceapp/auth/add_issue_modal.html' %}
+{% endblock %}

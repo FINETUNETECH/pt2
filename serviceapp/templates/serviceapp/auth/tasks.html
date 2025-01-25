@@ -1,0 +1,167 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% block 'content' %}
+<script>
+    // Order Bookings
+    async function fetchBookings(status){
+        // all bookings
+        $('.task-orders').html('')
+        fetch(`/api/bookings/?eo=cus`, {
+            method: 'GET',
+        }).then(res=>res.json()).then(data=>{
+            bookings = data.filter(e=>e.order_status==status)
+            if(bookings){
+                bookings.map(res=>{
+                    const booking_date = new Date(res.date_created)
+                    const booking_time = formatAMPM(booking_date)
+                    $('.task-orders').append(`
+                        <div class="col-md-3">
+                            <div class="card each-booking px-2 py-3" data-bs-toggle="modal" data-bs-target="#booking_detail_modal" data-booking="${res.pk}">
+                                <div class="line"></div>
+                                <div class="booking-card-detail">
+                                    <p class="m-0 p-0"><b>${res.name}</b></p>
+                                    <span class="text-muted">${res.assignee ? res.assignee : 'No Assignee'}</span>
+                                </div>
+                                <span class="position-absolute text-muted" style="right: 5px;">
+                                ${booking_date.getDate().toString()}-${booking_date.getMonth().toString()}-${booking_date.getFullYear().toString()}
+                                </span>
+                                <span class="position-absolute text-muted" style="right: 5px; top: 32px;">
+                                    <i class="bx bx-time align-middle"></i><span style="font-size:0.8em;">${booking_time}</span>
+                                </span>
+                            </div>
+                        </div>
+                    `)
+                })
+            }else{
+                $('.task-orders').append('No Bookings in this section')
+            }
+        })
+    }
+    $(document).ready(function(){
+      fetchBookings('In Progress');
+    })
+    // Update Bookings
+    $(document).on('click', '.each-booking', async function(){
+      let saved_booking_id = $(this).data('booking')
+      fetchConfirmedProgress(saved_booking_id)
+    });
+</script>
+<main class="page-content">
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" data-bs-toggle="pill" href="#tasks" data-link="In Progress" onclick="fetchBookings('In Progress')" role="tab" aria-selected="true">
+                <div class="d-flex align-items-center">
+                    <div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
+                    </div>
+                    <div class="tab-title">Tasks</div>
+                </div>
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="edit_spare_tab" data-bs-toggle="pill" href="#qc_orders" data-link="Ready for QC" onclick="fetchBookings('Ready for QC')" role="tab" aria-selected="false">
+                <div class="d-flex align-items-center">
+                    <div class="tab-icon"><i class="bx bx-user-pin font-18 me-1"></i>
+                    </div>
+                    <div class="tab-title">QC Orders</div>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="tasks" role="tabpanel">
+          <div class="task-orders row align-items-stretch justify-content-stretch"></div>
+        </div>
+        <div class="tab-pane fade" id="qc_orders" role="tabpanel">
+          <div class="task-orders row align-items-stretch justify-content-stretch"></div>
+        </div>
+    </div>
+</main>
+<!--Modal for edit orders-->
+<div class="modal fade" id="booking_detail_modal" tabindex="-1" aria-labelledby="booking_detail_modal_label"
+  aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="booking_detail_modal_label">Booking Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+     
+        <div class="container bookings progress-bookings">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Mobile no: <div class="fw-bolder progress_mobile_no"></div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Alternate Mobile no: <div class="fw-bolder progress_alter_mobile_no"></div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Customer Name: <div class="fw-bolder progress_name"></div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Issues: <div class="fw-bolder progress_issues"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Brand: <div class="fw-bolder progress_brand"></div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Product | Model: <div class="fw-bolder progress_product"></div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card border-0 shadow-sm px-3 py-2">
+                Mobile Password: <div class="fw-bolder progress_mobile_pin"></div>
+              </div>
+            </div>
+          </div>
+          <div class="remarks">
+            <form action="">
+              <div class="input mb-2">
+                <input class="form-check-input" type="checkbox" value="" id="ready_for_qc">
+                <label class="form-check-label" for="ready_for_qc">
+                  Ready for QC
+                </label>
+              </div>
+              <textarea class="form-control verified_remarks progress_remarks" name="remarks" id="" rows="5" placeholder="Enter Remarks (optional)"></textarea>
+              <div class="modal-footer bottom-0">
+                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger rounded-pill booking-btn delete-booking-button">Delete</button>
+                <button type="submit" class="btn btn-success rounded-pill save_progress save_completed_progress">Save & Next</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="container bookings qc-bookings">
+          <div class="questions_container">
+
+          </div>
+          <div class="input mb-2">
+            <input class="form-check-input" type="checkbox" value="" id="ready_for_delivery">
+            <label class="form-check-label" for="ready_for_delivery">
+              Ready for Delivery
+            </label>
+          </div>
+          <textarea class="form-control verified_remarks qc_remarks" name="remarks" id="" rows="5" placeholder="Enter Remarks (optional)"></textarea>
+          <div class="modal-footer bottom-0 mt-5">
+            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success rounded-pill save_question_progress">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

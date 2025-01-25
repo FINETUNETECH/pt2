@@ -1,0 +1,42 @@
+{% extends 'serviceapp/base.html' %}
+{% load static %}
+{% block 'content' %}
+    <main>
+        <div class="container">
+            <div class="card banner-card border-0 py-3 px-3 mt-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h1 class="ps-3">We always do Finetune  <p class="fw-bolder color-secondary"> About us </p> </h1>
+                    </div>
+                    <div class="col-lg-6">
+                        <img class="img-fluid d-block ms-auto mt-2" src="{% static 'service/images/about_phone.png' %}" height="250" width="250" alt="" srcset="">
+                    </div>
+                </div>
+            </div>
+            <div class="my-5 pt-5 text-center">
+                <h2 class="border-bottom-red d-inline-block fw-bolder">Where we started</h2>
+                <p class="text-muted py-3">
+                    We started a decade age and our main motto is to simplify the service of all types of handset devices with high quality within a minimal amount of time which always satifies our precious customers.
+                </p>
+            </div>
+            <div class="row my-5 py-5 align-items-center">
+                <div class="col-lg-6">
+                    <img class="img-fluid d-block ms-auto" src="{% static 'service/images/about_mob_user.svg' %}"  height="550" width="550" alt="">
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0">
+                    We are selling multi branded mobiles, accessories, computer accessories with best quality. We are located at <b>K.G Chavadi Road</b>.
+                    I have pledged to take the best quality service to each and every individual in this country. <br>
+                    <p class="text-center mt-1 fw-bold color-secondary">Book your service from anywhere and anytime. </p>
+                </div>
+            </div>
+            <div class="row my-5 py-5 align-items-center flex-lg-row flex-column-reverse">
+                <div class="col-lg-6 mt-5 mt-lg-0">
+                    We are professionals working with a passion as team. We take every service as our challenge and we get to complete it with atmost care. The digital platform now we are entering to expand our service.
+                </div>
+                <div class="col-lg-6">
+                    <img class="img-fluid d-block ms-auto" src="{% static 'service/images/work_about.svg' %}"  height="550" width="550" alt="">
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

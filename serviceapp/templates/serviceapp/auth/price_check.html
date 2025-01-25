@@ -1,0 +1,173 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% load static %}
+{% block 'content' %}
+<main class="page-content">
+  <button class="position-fixed float-bottom-right custom-sm-rounded-btn btn-success rounded-circle" data-bs-toggle="modal" data-bs-target="#newSpare"><i class="lni lni-plus"></i></button>
+  <div class="mx-3 my-5">
+      <div id="grid">
+        <!--Price Request Form-->
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 m-auto">
+              <form class="price_list" id="price_list">
+                <div class="row g2">
+                  <div class="form-floating col-md-6 mt-2">
+                    <input type="search" class="form-control" id="brandInput" placeholder="Brand*" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" required  >
+  
+                  </div>
+                  <div class="form-floating col-md-6 mt-2">
+                    <input type="text" class="form-control" data-model="" id="productInput" placeholder="Product Name / Model*" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" required>
+                    {% comment %} <label class="left-auto" for="productInput">Product name / Model*</label> {% endcomment %}
+                    <div class="selection"></div>
+                  </div>
+                  <div class="col-md-12 mt-3">
+                    {% comment %} <select name="" id="issueselect" class="form-select" required>
+                      <option value="Display">Display </option>
+                      <option value="Battery">Battery </option>
+                      <option value="Charger Port">Charger Port </option>
+                    </select> {% endcomment %}
+                    <select class="form-control" list="issuelist" id="issueselect" placeholder="Select Issue" required>
+                        <option value="" selected disabled>Please select issue*</option>
+                        <option value="Display"> Display </option>
+                        <option value="Battery"> Battery </option>
+                        <option value="Charger Port"> Charger Port </option> 
+                    </select>
+                  </div>
+                </div>
+                <div class="text-center mt-4">
+                  <button class="btn btn-sm btn-success" id="getPrice" type="submit">Get Price</button>
+                </div>
+              </form>
+              <div class="show-div mt-5 card"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</main>
+{% comment %} New spare add modal{% endcomment %}
+<div class="modal fade" id="newSpare" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add new spare part</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="newSpareForm">
+            <div class="row g-2">
+              <div class="col-md">
+                <div class="form-floating mb-3">
+                  <input type="text" id="productName" autocomplete="off" name="product" class="form-control" id="floatingInput" placeholder="Product name" required>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="modelName" name="model" autocomplete="off" id="floatingInput" autocomplete="off" placeholder="Model name" required>
+                </div>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-md">
+                <div class="form-floating mb-3">
+                  <select class="form-select" name="spare_name" id="sparename" aria-label="Floating label select example">
+                    <option selected disabled>Select Spare</option>
+                      <option value="Display">Display</option>
+                  </select>
+                  <label for="sparename">Please Select Spare</label>
+                </div>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-md">
+                <div class="form-floating mb-3">
+                  <select class="form-select form-control" id="quality" name="quality" aria-label="Floating label select example" required>
+                    <option selected disabled>Select the quality</option>
+                    <option value="Hq">With Warranty</option>
+                    <option value="Lq">Without Warranty</option>
+                  </select>
+                <label for="quality">Select Quality</label>
+              </div>
+              <div class="col-md">
+                <div class="form-floating mb-3">
+                  <input type="number" class="form-control" name="purchase_price" id="purchasePrice" placeholder="Enter Purchase price" min="0">
+                  <label for="purchasePrice">Purchase price</label>
+                </div>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-md">
+                <div class="form-floating mb-3">
+                  <select class="form-select" id="spareCosting" name="spare_costing" aria-label="Floating label select example">
+                    <option selected disabled>Spare costing</option>
+                    {% for costing in spare_costing %}
+                      <option value="{{costing.spare_costing_name}}">
+                        {{costing.spare_costing_name}}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <label for="spareCosting">Select spare cost</label>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-floating mb-3">
+                  <select class="form-select" id="discount" name="discount" aria-label="Floating label select example">
+                    <option selected disabled>Discount</option>
+                    {% for discount in discounts %}
+                      <option value="{{discount.discount_name}}">
+                        {{discount.discount_name}}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <label for="discount">Select discount</label>
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <svg>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+      <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </symbol>
+  </svg>
+  <!-- SubCategory -->
+  <div class="modal fade"  data-bs-backdrop="static" data-bs-keyboard="false" id="subcategory" tabindex="-1" aria-labelledby="subcategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="subcategoryLabel">SubCategory</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <div>
+              Entered product not registered!
+            </div>
+          </div>
+          <form id="subcategoryform">
+            <div class="form-floating mb-3">
+              <select class="form-select" id="subCategorySelect" aria-label="Floating label select example">
+                <option selected disabled>Select Subcategory</option>
+                {% for subcategory in  subcategories %}
+                  <option value="{{subcategory.name}}">{{subcategory.name}}</option>
+                {% endfor %}
+              </select>
+              <label for="subCategorySelect">Please Select subcategory</label>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% include 'serviceapp/auth/back_to_dashboard.html' %}
+{% endblock 'content' %}

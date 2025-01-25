@@ -1,0 +1,56 @@
+{% extends 'serviceapp/base.html' %}
+{% load static %}
+{% block 'content' %}
+    <main>
+        <div class="container">
+            <div class="card banner-card border-0 py-3 px-3 mt-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h1 class="ps-3">Get to know our store branch <p class="fw-bolder color-secondary"> Locate us </p> </h1>
+                    </div>
+                    <div class="col-lg-6">
+                        <img class="img-fluid d-block ms-md-auto me-md-auto me-lg-1 mt-2" src="{% static 'service/images/location.svg' %}" height="250" width="250" alt="" srcset="">
+                    </div>
+                </div>
+            </div>
+            <div class="my-5 pt-5 text-center">
+                <h2 class="border-bottom-red d-inline-block fw-bolder">Locate us</h2>
+                <p class="text-muted py-3 ">
+                    Currently we are located at two location in south. Refer below for the location and the google maps.
+                </p>
+            </div>
+            <div class="row my-md-5 py-5 align-items-center justify-content-center">
+                <div class="col-lg-6">
+                    <iframe class="" style="height:300px; width:100%;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.048636922242!2d76.90755181460692!3d10.883905392248625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba85cac2b10ccf9%3A0x13cfec71425cc8a3!2sFineTune!5e0!3m2!1sen!2sin!4v1642964889913!5m2!1sen!2sin" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <div style="padding-left:25px;" class="col-lg-6 mt-5 mt-lg-0 pl-5">
+                   <h3 class="fw-bolder color-secondary d-inline-block border-bottom-red">Coimbatore</h3>
+                   <address>
+                       Cheran Plaza K.G Chavadi Road, <br>
+                       Ettimadai, Pirivu, <br>
+                       near KK MAHAAL, <br>
+                       Coimbatore, <br>
+                       Tamil Nadu 641105. <br>
+                   </address>
+                </div>
+            </div>
+            <div class="row my-md-5 py-md-5 align-items-center flex-lg-row flex-column-reverse">
+                <div style="padding-left:25px;" class="col-lg-6 mt-5 mt-lg-0 ">
+                    <h3 class="fw-bolder color-secondary d-inline-block border-bottom-red">Kerala</h3>
+                   <address>
+                       Cheran Plaza K.G Chavadi Road, <br>
+                       Ettimadai, Pirivu, <br>
+                       near KK MAHAAL, <br>
+                       Coimbatore, <br>
+                       Tamil Nadu 641105. <br>
+                   </address>
+                </div>
+                <div class="col-lg-6">
+                    <div class= "trust-right mt-5 pt-5 d-flex flex-column align-items-center justify-content-center">
+                        <iframe style="height:300px; width:100%;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.048636922242!2d76.90755181460692!3d10.883905392248625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba85cac2b10ccf9%3A0x13cfec71425cc8a3!2sFineTune!5e0!3m2!1sen!2sin!4v1642964889913!5m2!1sen!2sin" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

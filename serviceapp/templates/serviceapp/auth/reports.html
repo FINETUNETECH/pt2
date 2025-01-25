@@ -1,0 +1,134 @@
+{% extends 'serviceapp/auth/base.html' %}
+{% load static %}
+
+{% block 'content' %}
+    <main class="page-content position-relative">
+        <div class="container ">
+            <div class="count-container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6>Total Bookings</h6>
+                                <h3>{{total_booking_count}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6>This Month Bookings</h6>
+                                <h3>{{monthly_booking_count}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6>TotalEnquiries</h6>
+                                <h3>{{total_enquiry_count}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6>Monthly Enquiry </h6>
+                                <h3>{{monthly_enquiry_count}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn text-primary fw-bold mt-2 ps-0 btn-rm-bs" data-bs-toggle="modal" data-bs-target="#showbookingreport">SEE MORE</button>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-8">
+                    <div class="card h-100 dx-viewport">
+                        <div class="card-body">
+                            <div id="chart-demo">
+                                <div id="chart"></div>
+                                <div class="options">
+                                    <div class="caption">Options</div>
+                                    <div class="option">
+                                        <span>Series Type</span>
+                                        <div id="types"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 dx-viewport">
+                        <div class="card-body">
+                            <h4>This month orders</h4>
+                            <h2 class="text-success order_payment" style="font-weight: bold;"></h2>
+                            <h4>This month pending payment</h4>
+                            <h2 class="text-danger font-weight-bold total_advance_amount" style="font-weight: bold;"></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Modal -->
+    <div class="modal fade" id="showbookingreport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Bookings</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="startpicker-input" style="margin-bottom:5px;">Filter By Date</label> <br>
+                            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                                <input class="form-control filter" id="startpicker-input" type="text" aria-label="Date">
+                                <span class="tui-ico-date"></span>
+                                <div id="startpicker-container" style="margin-left: -1px;"></div>
+                            </div>
+                            <span>to</span>
+                            <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                                <input class="form-control filter" id="endpicker-input" type="text" aria-label="Date">
+                                <span class="tui-ico-date"></span>
+                                <div id="endpicker-container" style="margin-left: -1px;"></div>
+                            </div>
+                            <div class="div">
+                                <button type="button" id="clear-btn" class="d-none btn btn-sm btn-danger py-0 rounded-pill mt-1">clear x</button>
+                            </div>
+                        </div>
+                        <div class="col-md-2 g-0">
+                            <label for="order_or_enq"  style="margin-bottom:5px;">Select Enq or Order</label> <br>
+                            <select name="" id="order_or_enq" class="select-sm form-control filter">
+                                <option value="" disabled selected>Enq or Order</option>
+                                <option value="ENQ">Enquiry</option>
+                                <option value="CUS">Orders</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 g-0">
+                            <label for="store_set"  style="margin-bottom:5px;">Select store</label> <br>
+                            <select name="" id="store_set" class="select-sm form-control filter">
+                                <option value="" disabled selected>All Stores</option>
+                                {% for store in stores %}
+                                    <option value="{{store.store_name}}">{{store.store_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <div class="all-bookings">
+                    <div class="report_booking_container pt-3 row">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}

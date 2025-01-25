@@ -96,7 +96,17 @@ DATABASES = {
     }
 }
 
-
+if 'VERCEL' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('SUPABASE_DB_NAME'),
+            'USER': os.environ.get('SUPABASE_DB_USER'),
+            'PASSWORD': os.environ.get('SUPABASE_DB_PASSWORD'), 
+            'HOST': os.environ.get('SUPABASE_DB_HOST'),
+            'PORT': '5432',
+        }
+    }
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -143,7 +153,7 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-AUTH_USER_MODEL = 'custom_user.CustomUser'
+AUTH_USER_MODEL = 'user.CustomUser'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'user.backends.EmailBackend',

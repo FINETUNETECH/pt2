@@ -63,7 +63,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
     
     class Meta:
-        app_label = 'custom_user'
+        app_label = 'user'
 
     def get_full_name(self):
         return self.phone

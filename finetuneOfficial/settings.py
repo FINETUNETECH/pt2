@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user.apps.UserConfig',
+    'user',
     'rest_framework',
     'serviceapp',
     'api',
@@ -140,9 +140,6 @@ USE_L10N = True
 USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
-
-TWILIO_ACCOUNT_SID = 'AC99e2ebca8e1c9f147324e1fc614dc309'
-TWILIO_AUTH_TOKEN = '105d3c3e646f99e1470ddfbe45bb3220'
 
 
 # Static files (CSS, JavaScript, Images)

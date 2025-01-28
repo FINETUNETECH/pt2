@@ -31,7 +31,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'phonetreat-git-main-finetunetechs-projects.vercel.app',
-    '.vercel.app'
+    '.vercel.app',
+    'phonetreat.in',
 ]
 
 
@@ -188,7 +189,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'https://phonetreat-git-main-finetunetechs-projects.vercel.app',
-    'https://*.vercel.app'
+    'https://*.vercel.app',
+    'phonetreat.in',
 ]
 
 #Admin Cred:

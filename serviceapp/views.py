@@ -35,42 +35,44 @@ from user.models import CustomUser, UserNotifications
 # from api.store.models import Stores
 from django.contrib.auth.decorators import permission_required
 from .decorators import allowed_users, check_staff_or_superuser
+from django.db import DatabaseError
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 
 @csrf_exempt
 def index(request):
-    brands = Brand.objects.all()
-    if request.method == 'POST':
-        location_search = request.POST['locationSearch']
-        #MapmyIndia API Call
-        # client_id = '33OkryzDZsJkxMItOVOiSVh79o5HJM4Lpd4McX57Z7cqq9kW7FyHgzhibv3-vVFB8-LJpc37z5LYp01o0hwh9w==';
-        # client_secret = 'lrFxI-iSEg963f7qDUi1pr6ywTDhwCv7vgUueZ6Olvjzo0C_NgJWOaiETE5GvOpDCnPbzRqyxs5KSnTUhtQDK3d5AG3NAyJk';
+    try:
+        brands = Brand.objects.all()
+        if request.method == 'POST':
+            try:
+                location_search = request.POST['locationSearch']
+                map = Maps.objects.filter(
+                    Q(location__icontains=location_search) | 
+                    Q(pincode__icontains=location_search)
+                )
+                location_res = serializers.serialize("json", map)
+                return HttpResponse(location_res)
+            except Exception as e:
+                logger.error(f"Location search error: {str(e)}")
+                return JsonResponse({'error': 'Location search unavailable'}, status=503)
         
-        # LOCATION_AUTH_API = 'https://outpost.mapmyindia.com/api/security/oauth/token'
-
-        # data = {
-        #     'grant_type': 'client_credentials',
-        #     'client_id': client_id,
-        #     'client_secret': client_secret
-        # }
-
-        # auth_req = requests.post(url=LOCATION_AUTH_API, data=data)
-        # tokenJSON = json.loads(auth_req.text)
-
-        # LOCATION_API = f'https://atlas.mapmyindia.com/api/places/search/json?query={location_search}'
+        context = {
+            'brands': brands,
+            'db_connected': True
+        }
+        return render(request, 'serviceapp/index.html', context)
         
-        # location_req = requests.get(url=LOCATION_API, headers={'Authorization': 'Bearer'+tokenJSON['access_token']})
-        # location_res = json.loads(location_req.text)
-
-        map = Maps.objects.filter(Q(location__icontains=location_search) | Q(pincode__icontains=location_search))
-        location_res = serializers.serialize("json", map)
-        return HttpResponse(location_res)
+    except DatabaseError as e:
+        logger.error(f"Database error in index: {str(e)}")
+        context = {
+            'brands': [],
+            'db_connected': False
+        }
+        return render(request, 'serviceapp/index.html', context)
     
-    context = {
-        'brands': brands
-    }
-
-    return render(request, 'serviceapp/index.html', context)
-
 @csrf_exempt
 def scheduleCall(request):
     if request.method == 'POST':
@@ -87,6 +89,7 @@ def scheduleCall(request):
         except:
             return JsonResponse({'success': 'false','message': "Failed to schedule! Please check your internet connection"}, safe=True)
     
+
 @csrf_exempt
 def getLocationAvailability(request):
     if request.method == 'POST':

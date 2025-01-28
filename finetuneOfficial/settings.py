@@ -111,12 +111,20 @@ if 'VERCEL' in os.environ:
             'HOST': os.environ.get('SUPABASE_DB_HOST'),
             'PORT': '5432',
             'OPTIONS': {
-                'connect_timeout': 10,
+                'sslmode': 'require',  # Required for Supabase
+                'connect_timeout': 30,  # Increased timeout
                 'keepalives': 1,
                 'keepalives_idle': 30,
                 'keepalives_interval': 10,
                 'keepalives_count': 5,
-            }
+                'target_session_attrs': 'read-write',  # Ensure we connect to primary
+            },
+            'TEST': {
+                'MIRROR': 'default',
+            },
+            'CONN_MAX_AGE': 0,  # Disable persistent connections
+            'ATOMIC_REQUESTS': False,  # Disable transaction wrapping
+            'AUTOCOMMIT': True,  # Ensure autocommit is enabled
         }
     }
 if 'DATABASE_URL' in os.environ:

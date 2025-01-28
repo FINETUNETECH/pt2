@@ -21,3 +21,5 @@ sqlparse==0.4.2
 twilio==7.7.1
 urllib3==1.26.7
 psycopg2-binary==2.9.9
+dj-database-url
+psycopg2-binary

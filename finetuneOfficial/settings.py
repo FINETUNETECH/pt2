@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ikv53)wyytzcaysi%-$o#t!#k$t_oz!2&e^dt2xkic&4k2bszi'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key-for-development')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'phonetreat-git-main-finetunetechs-projects.vercel.app',
+    '.vercel.app'
+]
 
 
 # Application definition
@@ -95,7 +101,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 if 'VERCEL' in os.environ:
     DATABASES = {
         'default': {
@@ -105,8 +110,21 @@ if 'VERCEL' in os.environ:
             'PASSWORD': os.environ.get('SUPABASE_DB_PASSWORD'), 
             'HOST': os.environ.get('SUPABASE_DB_HOST'),
             'PORT': '5432',
+            'OPTIONS': {
+                'connect_timeout': 10,
+                'keepalives': 1,
+                'keepalives_idle': 30,
+                'keepalives_interval': 10,
+                'keepalives_count': 5,
+            }
         }
     }
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -159,8 +177,11 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
-
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'https://phonetreat-git-main-finetunetechs-projects.vercel.app',
+    'https://*.vercel.app'
+]
 
 #Admin Cred:
 #Username: finetune

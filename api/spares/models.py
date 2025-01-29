@@ -97,7 +97,7 @@ class Type(models.Model):
 
 class Spare(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    spare_variety = models.ManyToManyField(SpareVariety, related_name='spare_varieties', null=True, blank=True)
+    spare_variety = models.ManyToManyField(SpareVariety, related_name='spare_varieties', blank=True)
     name = models.CharField(max_length=255, help_text="Enter the name of spare (Ex:Display, Speakers)")
     type = models.ForeignKey(Type, blank=True, null=True, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now=True)

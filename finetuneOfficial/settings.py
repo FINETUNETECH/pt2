@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -96,43 +98,33 @@ WSGI_APPLICATION = 'finetuneOfficial.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('SUPABASE_DB_NAME'),
+        'USER': os.environ.get('SUPABASE_DB_USER'),
+        'PASSWORD': os.environ.get('SUPABASE_DB_PASSWORD'), 
+        'HOST': os.environ.get('SUPABASE_DB_HOST'),
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
+            'connect_timeout': 30,
+            'keepalives': 1,
+            'keepalives_idle': 30,
+            'keepalives_interval': 10,
+            'keepalives_count': 5,
+            'target_session_attrs': 'read-write',
+        },
+        'TEST': {
+            'MIRROR': 'default',
+        },
+        'CONN_MAX_AGE': 0,
+        'ATOMIC_REQUESTS': False,
+        'AUTOCOMMIT': True,
     }
 }
-if 'VERCEL' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('SUPABASE_DB_NAME'),
-            'USER': os.environ.get('SUPABASE_DB_USER'),
-            'PASSWORD': os.environ.get('SUPABASE_DB_PASSWORD'), 
-            'HOST': os.environ.get('SUPABASE_DB_HOST'),
-            'PORT': '5432',
-            'OPTIONS': {
-                'sslmode': 'require',  # Required for Supabase
-                'connect_timeout': 30,  # Increased timeout
-                'keepalives': 1,
-                'keepalives_idle': 30,
-                'keepalives_interval': 10,
-                'keepalives_count': 5,
-                'target_session_attrs': 'read-write',  # Ensure we connect to primary
-            },
-            'TEST': {
-                'MIRROR': 'default',
-            },
-            'CONN_MAX_AGE': 0,  # Disable persistent connections
-            'ATOMIC_REQUESTS': False,  # Disable transaction wrapping
-            'AUTOCOMMIT': True,  # Ensure autocommit is enabled
-        }
-    }
-if 'DATABASE_URL' in os.environ:
-    DATABASES['default'] = dj_database_url.config(
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -190,7 +182,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'https://phonetreat-git-main-finetunetechs-projects.vercel.app',
     'https://*.vercel.app',
-    'phonetreat.in',
+    'https://phonetreat.in', 
+    'http://phonetreat.in',
 ]
 
 #Admin Cred:

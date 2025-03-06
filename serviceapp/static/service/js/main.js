@@ -439,89 +439,23 @@ $('.videos-carousel').owlCarousel({
 })
 
 // Navbar Toggle
-document.getElementById('menu_btn').addEventListener('click', ()=>{
-  $('#mobile-menu').css('width','250px');
-  $('.bg-black').fadeIn();
-  $('#menu_btn').hide();
-})
-$('#userMenuBtn').on('click',function(){
-  $('.menu-dropdown-user').toggleClass('d-block');
-})
+$(document).ready(function() {
+    // Mobile menu toggle
+    $('#menu_btn').on('click', function() {
+        $('#mobile-menu').css('width', '250px');
+        $('.bg-black').fadeIn();
+        $(this).hide();
+    });
 
-document.getElementById('bg-black').addEventListener('click', ()=>{
-  $('#mobile-menu').css('width','0px');
-  $('.bg-black').fadeOut();
-  $('#menu_btn').show();
-})
+    // Close menu when clicking outside
+    $('.bg-black').on('click', function() {
+        $('#mobile-menu').css('width', '0px');
+        $('.bg-black').fadeOut();
+        $('#menu_btn').show();
+    });
 
-// Date Picker
-$('#scheduledate').dateDropper({
-  format: 'd-m-Y',
-});
-$('#timePicker').timeDropper({
-  format: 'hh:mm A',
-});
-
-// Save Schedule call
-schedule_date_form.onsubmit = async (e)=>{
-  e.preventDefault();
-  schedule_btn.setAttribute('disabled',true)
-  fetch('schedulecall/', {
-    method: 'POST',
-    mode: 'same-origin',
-    body: new FormData(schedule_date_form),
-  }).then((res)=>res.json()).then((data)=>{
-    $('#scheduleCallModal').modal('hide');
-    if(data['success'] == 'true'){
-      sche_name.value = '';
-      scheduledate.value = '';
-      timePicker.value = '';
-      scheduleMessage.value = '';
-      Swal.fire(
-        'Success!',
-        'We will contact you in your preferred time!',
-        'success'
-      );
-    } else{
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Failed to schedule! Please check your internet connection',
-        })
-    }
-  })
-
-  // if(result['success'] == true){
-    
-  // } else if(result['success'] == false){
-  //   $('#scheduleCallModal').modal('hide')
-  //   Swal.fire({
-  //     icon: 'error',
-  //     title: 'Oops...',
-  //     text: 'Failed to schedule! Please check your internet connection',
-  //   })
-  // }
-}
-
-// Fetch name on entering mobile
-mobileNo = document.querySelector('#bookingno');
-mobileNo.addEventListener('input', function(){  
-  if(this.value.length == 10){
-    let data = new FormData()
-    data.append('mobile', this.value)
-    if(this.value.length == 10){
-      fetch('repairuser/', {
-        method: 'POST',
-        body: data
-      }).then(res => res.json()).then(data=>{
-        if(data.user != null){
-          document.querySelector('#bookingname').value = data.user.fields.name;
-          $('.username-filled-warning').removeClass('d-none');
-        }else{
-          document.querySelector('#username').value = '';
-          $('.username-filled-warning').addClass('d-none');
-        }
-      }).catch(err=>console.log(err));
-    }
-  }
+    // Bootstrap navbar toggler
+    $('.navbar-toggler').on('click', function() {
+        $('.navbar-collapse').toggleClass('show');
+    });
 })

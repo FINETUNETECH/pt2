@@ -20,10 +20,10 @@
           <a class="navbar-brand" href="{% url 'index' %}">
               <img class="ms-4" src="{% static 'service/images/ml1.png' %}" height="80" width="120" alt="">
           </a>
-          <button class="navbar-toggler" id="menu_btn" type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto ms-5 mb-2 mb-lg-0">
               <li class="nav-item ms-3">
                 <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
@@ -131,14 +131,11 @@
     </div>
     {% include 'serviceapp/availability_modal.html' %}
     {% include 'serviceapp/login_modal.html' %}
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (if you're using it) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'service/js/datedropper-jquery.js' %}"></script>
-    <script src="{% static 'service/js/timedropper-jquery.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-    <script src="https://kit.fontawesome.com/0f2c2c715f.js" crossorigin="anonymous"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{% static 'service/js/owl.carousel.min.js' %}"></script>
+    <!-- Your custom JS -->
     <script src="{% static 'service/js/main.js' %}"></script>
     {% if messages %}
       {% for message in messages %}

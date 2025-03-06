@@ -106,32 +106,42 @@ if 'VERCEL' in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('SUPABASE_DB_NAME'),
-            'USER': os.environ.get('SUPABASE_DB_USER'),
-            'PASSWORD': os.environ.get('SUPABASE_DB_PASSWORD'), 
-            'HOST': os.environ.get('SUPABASE_DB_HOST'),
+            'NAME': os.environ.get('POSTGRES_DATABASE'),
+            'USER': os.environ.get('POSTGRES_USER'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': os.environ.get('POSTGRES_HOST'),
             'PORT': '5432',
             'OPTIONS': {
-                'sslmode': 'require',  # Required for Supabase
-                'connect_timeout': 30,  # Increased timeout
+                'sslmode': 'require',
+                'connect_timeout': 30,
                 'keepalives': 1,
                 'keepalives_idle': 30,
                 'keepalives_interval': 10,
                 'keepalives_count': 5,
-                'target_session_attrs': 'read-write',  # Ensure we connect to primary
+                'target_session_attrs': 'read-write',
             },
             'TEST': {
                 'MIRROR': 'default',
             },
             'CONN_MAX_AGE': 0,  # Disable persistent connections
-            'ATOMIC_REQUESTS': False,  # Disable transaction wrapping
-            'AUTOCOMMIT': True,  # Ensure autocommit is enabled
+            'ATOMIC_REQUESTS': False,
+            'AUTOCOMMIT': True,
         }
     }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+# Override database config if DATABASE_URL is set
 if 'DATABASE_URL' in os.environ:
     DATABASES['default'] = dj_database_url.config(
         conn_max_age=600,
         conn_health_checks=True,
+        ssl_require=True
     )
 
 # Password validation

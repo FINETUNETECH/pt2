@@ -1,25 +1,39 @@
-asgiref==3.4.1
+# Django and REST framework
+Django==3.2.9
+djangorestframework==3.13.1
+django-cors-headers==3.10.0
+
+# Database
+psycopg2-binary==2.9.9
+dj-database-url
+
+# Image Processing
+Pillow==9.5.0
+
+# Authentication
+PyJWT==2.3.0
+
+# HTTP/Network
+requests==2.26.0
+urllib3==1.26.7
 certifi==2021.10.8
 charset-normalizer==2.0.8
-Django==3.2.9
-django-cors-headers==3.10.0
-djangorestframework==3.13.1
 idna==3.3
-MouseInfo==0.1.3
-Pillow==8.4.0
+
+# Django Dependencies
+asgiref==3.4.1
+pytz==2021.3
+sqlparse==0.4.2
+
+# GUI Automation (if needed)
 PyAutoGUI==0.9.53
+MouseInfo==0.1.3
 PyGetWindow==0.0.9
-PyJWT==2.3.0
 PyMsgBox==1.0.9
 pyperclip==1.8.2
 PyRect==0.2.0
 PyScreeze==0.1.28
 pytweening==1.0.4
-pytz==2021.3
-requests==2.26.0
-sqlparse==0.4.2
+
+# Messaging
 twilio==7.7.1
-urllib3==1.26.7
-psycopg2-binary==2.9.9
-dj-database-url
-psycopg2-binary

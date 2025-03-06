@@ -7,7 +7,8 @@ import re
 import pytz
 from unicodedata import name
 from django.contrib import messages
-from django.http.response import HttpResponse, JsonResponse
+from django.http import JsonResponse
+from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from api.subcategory.models import SubCategory
@@ -35,8 +36,9 @@ from user.models import CustomUser, UserNotifications
 # from api.store.models import Stores
 from django.contrib.auth.decorators import permission_required
 from .decorators import allowed_users, check_staff_or_superuser
-from django.db import DatabaseError
+from django.db import DatabaseError, connections, OperationalError
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -896,3 +898,26 @@ def questions(request):
         'question_set': question_set
     }
     return render(request, 'serviceapp/auth/questions.html', context)
+
+def debug_db(request):
+    if not request.user.is_superuser:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+        
+    try:
+        c = connections['default'].cursor()
+        c.execute('SELECT 1;')
+        c.close()
+        return JsonResponse({
+            'status': 'connected',
+            'environment': os.environ.get('VERCEL_ENV', 'unknown'),
+            'database_host': os.environ.get('POSTGRES_HOST', 'unknown'),
+            'database_name': os.environ.get('POSTGRES_DATABASE', 'unknown')
+        })
+    except OperationalError as e:
+        return JsonResponse({
+            'status': 'error',
+            'error': str(e),
+            'environment': os.environ.get('VERCEL_ENV', 'unknown'),
+            'database_host': os.environ.get('POSTGRES_HOST', 'unknown'),
+            'database_name': os.environ.get('POSTGRES_DATABASE', 'unknown')
+        }, status=500)

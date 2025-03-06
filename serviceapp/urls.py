@@ -34,5 +34,6 @@ urlpatterns = [
     path('orders/', views.orders, name='orders'),
     path('tasks/', views.tasks, name='tasks'),
     path('questions/', views.questions, name='questions'),
+    path('debug-db/', views.debug_db, name='debug_db'),
     # path('accounts/', include('django.contrib.auth.urls')),
 ]

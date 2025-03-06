@@ -25,12 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key-for-development')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'VERCEL' not in os.environ
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'phonetreat-git-main-finetunetechs-projects.vercel.app',
+    'phonetreat-git-preview-finetunetechs-projects.vercel.app',
     '.vercel.app',
     'phonetreat.in',
 ]
@@ -102,7 +103,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-if 'VERCEL' in os.environ:
+
+# Check for both production and preview environments
+if 'VERCEL' in os.environ or 'VERCEL_ENV' in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -118,21 +121,8 @@ if 'VERCEL' in os.environ:
                 'keepalives_idle': 30,
                 'keepalives_interval': 10,
                 'keepalives_count': 5,
-                'target_session_attrs': 'read-write',
             },
-            'TEST': {
-                'MIRROR': 'default',
-            },
-            'CONN_MAX_AGE': 0,  # Disable persistent connections
-            'ATOMIC_REQUESTS': False,
-            'AUTOCOMMIT': True,
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'CONN_MAX_AGE': 0,
         }
     }
 
@@ -199,9 +189,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'https://phonetreat-git-main-finetunetechs-projects.vercel.app',
+    'https://phonetreat-git-preview-finetunetechs-projects.vercel.app',
     'https://*.vercel.app',
-    'phonetreat.in',
+    'https://phonetreat.in',
 ]
+
+# Add SECURE settings for production/preview
+if 'VERCEL' in os.environ:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #Admin Cred:
 #Username: finetune
